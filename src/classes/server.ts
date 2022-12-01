@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import logger from 'morgan';
 import config from '../config';
+import dbConnection from './../lib';
 
 export class Server {
   private app: Application;
@@ -12,6 +13,9 @@ export class Server {
     //middlewares
     this.middlewares();
 
+    //database
+    this.dbConnect();
+
     //server listen
     //this.listen()
   }
@@ -20,6 +24,10 @@ export class Server {
     this.app.use(logger('dev'));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
+  }
+
+  async dbConnect() {
+    await dbConnection();
   }
 
   listen() {
