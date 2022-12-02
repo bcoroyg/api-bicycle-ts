@@ -16,7 +16,8 @@
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.5",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -27,6 +28,7 @@
     "@types/jsonwebtoken": "^8.5.9",
     "@types/morgan": "^1.9.3",
     "@types/node": "^18.11.10",
+    "@types/shortid": "^0.0.29",
     "dotenv": "^16.0.3",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
