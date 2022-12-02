@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import passport from 'passport';
 import { BicycleService } from '../services';
 
 const router = Router();
@@ -33,47 +34,59 @@ router.get('/:bicycleId', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
-  const { body: bicycle } = req;
-  try {
-    const createdBicycle = await _bicycleService.createBicycle(bicycle);
-    res.status(201).json({
-      data: createdBicycle,
-      msg: 'bicycle created',
-    });
-  } catch (error) {
-    next(error);
+router.post(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    const { body: bicycle } = req;
+    try {
+      const createdBicycle = await _bicycleService.createBicycle(bicycle);
+      res.status(201).json({
+        data: createdBicycle,
+        msg: 'bicycle created',
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.put('/:bicycleId', async (req, res, next) => {
-  const { bicycleId } = req.params;
-  const { body: bicycle } = req;
-  try {
-    const updatedBicycle = await _bicycleService.updateBicycle(
-      bicycleId,
-      bicycle
-    );
-    return res.status(200).json({
-      data: updatedBicycle,
-      msg: 'bicycle updated',
-    });
-  } catch (error) {
-    next(error);
+router.put(
+  '/:bicycleId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    const { bicycleId } = req.params;
+    const { body: bicycle } = req;
+    try {
+      const updatedBicycle = await _bicycleService.updateBicycle(
+        bicycleId,
+        bicycle
+      );
+      return res.status(200).json({
+        data: updatedBicycle,
+        msg: 'bicycle updated',
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.delete('/:bicycleId', async (req, res, next) => {
-  const { bicycleId } = req.params;
-  try {
-    const deletedBicycle = await _bicycleService.deleteBicycle(bicycleId);
-    return res.status(200).json({
-      data: deletedBicycle,
-      msg: 'bicycle deleted',
-    });
-  } catch (error) {
-    next(error);
+router.delete(
+  '/:bicycleId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    const { bicycleId } = req.params;
+    try {
+      const deletedBicycle = await _bicycleService.deleteBicycle(bicycleId);
+      return res.status(200).json({
+        data: deletedBicycle,
+        msg: 'bicycle deleted',
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 export default router;
