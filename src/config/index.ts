@@ -1,10 +1,10 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv/config");
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv/config');
 }
 
 const config = {
-  dev: process.env.NODE_ENV !== "production",
-  test: process.env.NODE_ENV === "test",
+  dev: process.env.NODE_ENV !== 'production',
+  test: process.env.NODE_ENV === 'test',
   port: process.env.PORT,
   dbUser: process.env.DB_USER,
   dbPassword: process.env.DB_PASSWORD,
@@ -17,6 +17,7 @@ const config = {
   mailPassword: process.env.MAIL_PASSWORD,
   mailHost: process.env.MAIL_HOST,
   mailPort: process.env.MAIL_PORT,
+  hostFrontend: process.env.HOST_FRONTEND,
 };
 
 export default config;

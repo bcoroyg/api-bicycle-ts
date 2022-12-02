@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import juice from 'juice';
 import pug from 'pug';
 import { convert } from 'html-to-text';
-import config from '../../config/index.js';
+import config from '../../config';
 
 let mailConfig = {};
 if (process.env.NODE_ENV === 'production') {
@@ -27,12 +27,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const generateHTML = (file: string, options = {}) => {
-  const html = pug.renderFile(`${__dirname}views/${file}.pug`, options);
+  const html = pug.renderFile(`${__dirname}/views/${file}.pug`, options);
   return juice(html);
 };
 
 export const sendMail = async (options: any) => {
-  try {
     const transporter = nodemailer.createTransport(mailConfig);
     //Utilizar template
     const html = generateHTML(options.file, options);
@@ -47,7 +46,4 @@ export const sendMail = async (options: any) => {
     };
     //Enviar el correo
     return transporter.sendMail(optionsEmail);
-  } catch (error) {
-    throw new Error(error);
-  }
 };

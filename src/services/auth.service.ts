@@ -1,5 +1,8 @@
 import { BadRequest } from 'http-errors';
+import config from '../config';
 import models from '../database/models';
+import { sendMail } from '../utils/mailer/nodemailer';
+import tokenEmailHandler from '../utils/tokenEmailHandler';
 
 export class AuthService {
   private static _authServiceInstance: AuthService;
@@ -19,7 +22,29 @@ export class AuthService {
     if (userDB) {
       throw new BadRequest('The email already exists, try again!');
     }
-    const registeredUser = await models.User.create(user);
+    const data = {
+      ...user,
+    };
+    //Generar token de Email
+    const tokenEmail = tokenEmailHandler();
+    data.token = tokenEmail.token;
+    //Creación de la url
+    const url = `${config.hostFrontend}/confirmation-account/${data.token}`;
+    //Email options
+    const mail = {
+      from: config.mailUser,
+      to: data.email,
+      subject: 'Activate Account',
+      file: 'confirm-account',
+      url,
+    };
+    //Envio de correo
+    try {
+      await sendMail(mail);
+    } catch (error: any) {
+      throw new BadRequest(error.response);
+    }
+    const registeredUser = await models.User.create(data);
     return registeredUser;
   }
 }

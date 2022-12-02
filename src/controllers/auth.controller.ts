@@ -30,7 +30,7 @@ router.post(
       const createdUser = await _authService.registerUser(user);
       res.status(201).json({
         data: createdUser,
-        msg: 'user registered!',
+        msg: 'account confirmation email sent!',
       });
     } catch (error) {
       next(error);
