@@ -1,11 +1,11 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import config from '../../config';
 
-const withErrorStack = (error: any, stack: any) => {
+const withErrorStack = (statusCode: number, error: string, stack: string) => {
   if (config.dev) {
-    return { msg: error, stack };
+    return { statusCode, msg: error, stack };
   }
-  return { msg: error };
+  return { statusCode, msg: error };
 };
 
 const logErrors = (
@@ -24,8 +24,8 @@ const errorHandler: ErrorRequestHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  res.status(err.statusCode || 500);
-  res.json(withErrorStack(err.message, err.stack));
+  res.status(err.statusCode ? err.statusCode : (err.statusCode = 500));
+  res.json(withErrorStack(err.statusCode, err.message, err.stack));
 };
 
 export { logErrors, errorHandler };

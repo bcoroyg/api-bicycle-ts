@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import logger from 'morgan';
 import config from '../config';
 import routerAPI from '../routes';
+import { errorHandler, logErrors, notFoundHandler } from '../utils/middlewares';
 import dbConnection from './../lib';
 
 export class Server {
@@ -20,6 +21,9 @@ export class Server {
     //database
     this.dbConnect();
 
+    //middlewares error
+    this.errors();
+
     //server listen
     //this.listen()
   }
@@ -36,6 +40,14 @@ export class Server {
 
   async dbConnect() {
     await dbConnection();
+  }
+
+  errors() {
+    //Error 404
+    this.app.use(notFoundHandler);
+    //Middlewares de Errores
+    this.app.use(logErrors);
+    this.app.use(errorHandler);
   }
 
   listen() {
