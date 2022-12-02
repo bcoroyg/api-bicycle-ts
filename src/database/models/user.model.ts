@@ -36,6 +36,9 @@ const UserSchema = new Schema({
   token: {
     type: String,
   },
+  expireToken: {
+    type: Number,
+  },
 });
 UserSchema.plugin(uniqueValidator, { message: '{PATH} already exists.' });
 

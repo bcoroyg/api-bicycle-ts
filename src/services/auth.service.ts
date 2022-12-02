@@ -48,14 +48,44 @@ export class AuthService {
     return registeredUser;
   }
 
-  async confirmAccountUser(token:string) {
-    const user = await models.User.findOne({token});
-    if(!user){
-      throw new BadRequest('We did not find a user with this token.')
+  async confirmAccountUser(token: string) {
+    const user = await models.User.findOne({ token });
+    if (!user) {
+      throw new BadRequest('We did not find a user with this token.');
     }
     user.verified = true;
     user.token = undefined;
     await user.save();
+    return user._id;
+  }
+
+  async forgotPassword(email: string) {
+    const userDB = await models.User.findOne({ email });
+    if (!userDB) {
+      throw new BadRequest('User not found!');
+    }
+    //Generar token de Email
+    const tokenEmail = tokenEmailHandler(3600000);
+    console.log(tokenEmail);
+    //Creación de la url
+    const url = `${config.hostFrontend}/reset-password/${tokenEmail.token}`;
+    //Envio de correo
+    //Email options
+    const mail = {
+      from: config.mailUser,
+      to: userDB.email,
+      subject: 'Forgot password',
+      file: 'reset-password',
+      url,
+    };
+    try {
+      await sendMail(mail);
+    } catch (error: any) {
+      throw new BadRequest(error.request);
+    }
+    userDB.token = tokenEmail.token;
+    userDB.expireToken = tokenEmail.expireToken;
+    const user = await userDB.save();
     return user._id;
   }
 }
