@@ -1,5 +1,7 @@
 import { Application, Router } from 'express';
 import { readdirSync } from 'fs';
+//passport
+import '../utils/auth';
 
 const PATH_CONTROLLERS = `${__dirname}/../controllers`;
 

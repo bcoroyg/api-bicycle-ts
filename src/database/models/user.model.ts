@@ -1,6 +1,6 @@
-import { genSalt, hash } from 'bcrypt';
+import { compare, genSalt, hash } from 'bcrypt';
 import { model, Schema } from 'mongoose';
-import uniqueValidator from 'mongoose-unique-validator'
+import uniqueValidator from 'mongoose-unique-validator';
 
 const validateEmail = (email: string) => {
   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -50,6 +50,10 @@ UserSchema.pre('save', async function (next) {
 UserSchema.methods.toJSON = function () {
   const { __v, password, token, verified, ...user } = this.toObject();
   return user;
+};
+
+UserSchema.methods.verifyPassword = async function (password: string) {
+  return await compare(password, this.password);
 };
 
 const User = model('user', UserSchema);
