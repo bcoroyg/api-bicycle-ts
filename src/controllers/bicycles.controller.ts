@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import passport from 'passport';
 import { BicycleService } from '../services';
 
 const router = Router();
 const _bicycleService = BicycleService.getInstance();
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const [bicycles, bicyclesTotal] = await Promise.all([
       _bicycleService.getBicycles(),
@@ -21,23 +21,26 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/:bicycleId', async (req, res, next) => {
-  const { bicycleId } = req.params;
-  try {
-    const bicycle = await _bicycleService.getBicycleById(bicycleId);
-    return res.status(200).json({
-      data: bicycle,
-      msg: 'bicycle retrieved',
-    });
-  } catch (error) {
-    next(error);
+router.get(
+  '/:bicycleId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { bicycleId } = req.params;
+    try {
+      const bicycle = await _bicycleService.getBicycleById(bicycleId);
+      return res.status(200).json({
+        data: bicycle,
+        msg: 'bicycle retrieved',
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { body: bicycle } = req;
     try {
       const createdBicycle = await _bicycleService.createBicycle(bicycle);
@@ -54,7 +57,7 @@ router.post(
 router.put(
   '/:bicycleId',
   passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { bicycleId } = req.params;
     const { body: bicycle } = req;
     try {
@@ -75,7 +78,7 @@ router.put(
 router.delete(
   '/:bicycleId',
   passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { bicycleId } = req.params;
     try {
       const deletedBicycle = await _bicycleService.deleteBicycle(bicycleId);

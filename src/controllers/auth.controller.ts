@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import passport from 'passport';
 import { AuthService } from '../services';
 import generateToken from '../utils/jwtHandler';
@@ -9,7 +9,7 @@ const _authService = AuthService.getInstance();
 router.post(
   '/login',
   passport.authenticate('local', { session: false }),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
     try {
       const token = await generateToken(user);
@@ -22,17 +22,20 @@ router.post(
   }
 );
 
-router.post('/register', async (req, res, next) => {
-  const { body: user } = req;
-  try {
-    const createdUser = await _authService.registerUser(user);
-    res.status(201).json({
-      data: createdUser,
-      msg: 'user registered!',
-    });
-  } catch (error) {
-    next(error);
+router.post(
+  '/register',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { body: user } = req;
+    try {
+      const createdUser = await _authService.registerUser(user);
+      res.status(201).json({
+        data: createdUser,
+        msg: 'user registered!',
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 export default router;
