@@ -13,6 +13,10 @@ const config = {
   dbPort: process.env.DB_PORT,
   jwtSecret: process.env.JWT_SECRET,
   jwtTimeExpire: process.env.JWT_TIME_EXPIRE,
+  mailUser: process.env.MAIL_USER,
+  mailPassword: process.env.MAIL_PASSWORD,
+  mailHost: process.env.MAIL_HOST,
+  mailPort: process.env.MAIL_PORT,
 };
 
 export default config;

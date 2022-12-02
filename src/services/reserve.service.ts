@@ -66,6 +66,7 @@ export class ReserveService {
       reserve,
       { new: true }
     ).populate('user bicycle');
+
     return updatedReserve;
   }
 

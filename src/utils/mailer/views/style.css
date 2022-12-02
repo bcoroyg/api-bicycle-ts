@@ -1,0 +1,24 @@
+h2 {
+  font-family: Arial, Helvetica;
+  font-size: 3rem;
+  text-align: center;
+}
+
+a {
+  margin-top: 1rem;
+  font-family: Arial, Helvetica;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+  text-decoration: none;
+}
+
+p {
+  font-family: Arial, Helvetica;
+  line-height: 1;
+}
+
+h4 {
+  font-family: Arial, Helvetica;
+  font-weight: bold;
+}
