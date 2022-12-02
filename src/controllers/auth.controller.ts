@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { AuthService } from '../services';
+import generateToken from '../utils/jwtHandler';
 
 const router = Router();
 const _authService = AuthService.getInstance();
@@ -11,8 +12,9 @@ router.post(
   async (req, res, next) => {
     const { user } = req;
     try {
+      const token = await generateToken(user);
       res.status(200).json({
-        user,
+        token,
       });
     } catch (error) {
       next(error);
