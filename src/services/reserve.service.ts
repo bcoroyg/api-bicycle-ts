@@ -1,3 +1,4 @@
+import { NotFound } from 'http-errors';
 import models from '../database/models';
 
 export class ReserveService {
@@ -29,6 +30,9 @@ export class ReserveService {
     const reserve = await models.Reserve.findById(reserveId).populate(
       'user bicycle'
     );
+    if (!reserve) {
+      throw new NotFound('reserve not found!');
+    }
     return reserve;
   }
 
@@ -45,12 +49,15 @@ export class ReserveService {
 
   //actualizar reserva
   async updateReserve(reserveId: string, reserve: any) {
+    const reserveDB = await models.Reserve.findById(reserveId);
+    if (!reserveDB) {
+      throw new NotFound('reserve not found!');
+    }
     if (reserve.bicycle) {
-      const reserveOld = await models.Reserve.findById(reserveId);
-      const bicycleOld = await models.Bicycle.findById(reserveOld?.bicycle);
+      const bicycleDB = await models.Bicycle.findById(reserveDB.bicycle);
       const bicycleNew = await models.Bicycle.findById(reserve.bicycle);
-      bicycleOld!.reserved = false;
-      await bicycleOld!.save();
+      bicycleDB!.reserved = false;
+      await bicycleDB!.save();
       bicycleNew!.reserved = true;
       await bicycleNew!.save();
     }
@@ -65,6 +72,9 @@ export class ReserveService {
   //eliminar reserva
   async deleteReserve(reserveId: string) {
     const deletedReserve = await models.Reserve.findByIdAndDelete(reserveId);
-    return deletedReserve?._id;
+    if (!deletedReserve) {
+      throw new NotFound('reserve not found!');
+    }
+    return deletedReserve._id;
   }
 }
