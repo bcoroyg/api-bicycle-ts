@@ -39,28 +39,22 @@ export class ReserveService {
   //crear reserva
   async createReserve(reserve: any) {
     const bicycle = await models.Bicycle.findById(reserve.bicycle);
-    if (bicycle) {
-      bicycle.reserved = true;
-      await bicycle.save();
-    }
+    bicycle!.reserved = true;
+    await bicycle!.save();
     const createdReserve = await models.Reserve.create(reserve);
     return createdReserve;
   }
 
   //actualizar reserva
   async updateReserve(reserveId: string, reserve: any) {
-    const reserveDB = await models.Reserve.findById(reserveId);
+    const reserveDB = await models.Reserve.findOne({
+      _id: reserveId,
+      user: reserve.user,
+    });
     if (!reserveDB) {
       throw new NotFound('reserve not found!');
     }
-    if (reserve.bicycle) {
-      const bicycleDB = await models.Bicycle.findById(reserveDB.bicycle);
-      const bicycleNew = await models.Bicycle.findById(reserve.bicycle);
-      bicycleDB!.reserved = false;
-      await bicycleDB!.save();
-      bicycleNew!.reserved = true;
-      await bicycleNew!.save();
-    }
+
     const updatedReserve = await models.Reserve.findByIdAndUpdate(
       reserveId,
       reserve,

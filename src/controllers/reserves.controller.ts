@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import passport from 'passport';
 import { ReserveService } from '../services';
+import {
+  createReserveValidator,
+  reserveIdValidator,
+  updateReserveValidator,
+} from '../utils/validators';
 
 const router = Router();
 const _reserveService = ReserveService.getInstance();
@@ -28,6 +33,7 @@ router.get(
 router.get(
   '/:reserveId',
   passport.authenticate('jwt', { session: false }),
+  reserveIdValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { reserveId } = req.params;
     try {
@@ -45,6 +51,7 @@ router.get(
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
+  createReserveValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { body: reserve } = req;
     try {
@@ -62,6 +69,7 @@ router.post(
 router.put(
   '/:reserveId',
   passport.authenticate('jwt', { session: false }),
+  updateReserveValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { reserveId } = req.params;
     const { body: reserve } = req;
@@ -83,6 +91,7 @@ router.put(
 router.delete(
   '/:reserveId',
   passport.authenticate('jwt', { session: false }),
+  reserveIdValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { reserveId } = req.params;
     try {

@@ -32,6 +32,15 @@ export class BicycleService {
     }
     return bicycle;
   }
+
+  async getBicycleByIdAndReserve(bicycleId: string) {
+    const bicycle = await models.Bicycle.findOne({
+      _id: bicycleId,
+      reserved: true,
+    });
+    return bicycle;
+  }
+
   //create bicycle
   async createBicycle(bicycle: any) {
     const createdBicycle = await models.Bicycle.create(bicycle);
