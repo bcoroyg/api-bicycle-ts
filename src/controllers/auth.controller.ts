@@ -64,4 +64,18 @@ router.post('/forgot-password', async (req, res, next) => {
   }
 });
 
+router.post('/reset-password/:token', async (req, res, next) => {
+  const { token } = req.params;
+  const { password } = req.body;
+  try {
+    const user = await _authService.resetPassword(token, password);
+    res.status(200).json({
+      data: user,
+      msg: 'password reset!',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

@@ -66,7 +66,6 @@ export class AuthService {
     }
     //Generar token de Email
     const tokenEmail = tokenEmailHandler(3600000);
-    console.log(tokenEmail);
     //Creación de la url
     const url = `${config.hostFrontend}/reset-password/${tokenEmail.token}`;
     //Envio de correo
@@ -85,6 +84,18 @@ export class AuthService {
     }
     userDB.token = tokenEmail.token;
     userDB.expireToken = tokenEmail.expireToken;
+    const user = await userDB.save();
+    return user._id;
+  }
+
+  async resetPassword(token: string, password: string) {
+    const userDB = await models.User.findOne({ token });
+    if (!userDB) {
+      throw new BadRequest('We did not find a user with this token.!');
+    }
+    userDB.password = password;
+    userDB.token = undefined;
+    userDB.expireToken = undefined;
     const user = await userDB.save();
     return user._id;
   }
