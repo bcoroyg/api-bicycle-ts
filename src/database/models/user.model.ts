@@ -1,3 +1,4 @@
+import { genSalt, hash } from 'bcrypt';
 import { model, Schema } from 'mongoose';
 
 const validateEmail = (email: string) => {
@@ -35,6 +36,19 @@ const UserSchema = new Schema({
     type: String,
   },
 });
+
+UserSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    const salt = await genSalt(10);
+    this.password = await hash(this.password, salt);
+  }
+  next();
+});
+
+UserSchema.methods.toJSON = function () {
+  const { __v, password, token, verified, ...user } = this.toObject();
+  return user;
+};
 
 const User = model('user', UserSchema);
 
