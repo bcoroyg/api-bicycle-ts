@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import passport from 'passport';
 import { BicycleService } from '../services';
+import {
+  bicycleIdValidator,
+  createBicycleValidator,
+} from '../utils/validators';
 
 const router = Router();
 const _bicycleService = BicycleService.getInstance();
@@ -23,6 +27,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
 router.get(
   '/:bicycleId',
+  bicycleIdValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { bicycleId } = req.params;
     try {
@@ -40,6 +45,7 @@ router.get(
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
+  createBicycleValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { body: bicycle } = req;
     try {
@@ -77,6 +83,7 @@ router.put(
 
 router.delete(
   '/:bicycleId',
+  bicycleIdValidator,
   passport.authenticate('jwt', { session: false }),
   async (req: Request, res: Response, next: NextFunction) => {
     const { bicycleId } = req.params;
