@@ -1,6 +1,6 @@
 import models from '../database/models';
 
-class UserService {
+export class UserService {
   private static _userServiceInstance: UserService;
 
   constructor() {}
