@@ -1,5 +1,6 @@
 import { genSalt, hash } from 'bcrypt';
 import { model, Schema } from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator'
 
 const validateEmail = (email: string) => {
   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -36,6 +37,7 @@ const UserSchema = new Schema({
     type: String,
   },
 });
+UserSchema.plugin(uniqueValidator, { message: '{PATH} already exists.' });
 
 UserSchema.pre('save', async function (next) {
   if (this.isModified('password')) {

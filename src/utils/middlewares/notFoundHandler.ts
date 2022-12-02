@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import createError from 'http-errors';
+import { NotFound } from 'http-errors';
 
 export const notFoundHandler = (req: Request, res: Response) => {
-  throw new createError.NotFound();
+  throw new NotFound();
 };
