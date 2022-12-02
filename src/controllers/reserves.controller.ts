@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import passport from 'passport';
 import { ReserveService } from '../services';
+import authorizeRoleHandler from '../utils/middlewares/authorizeRoleHandler';
+import roleHandler from '../utils/roleHandler';
 import {
   createReserveValidator,
   reserveIdValidator,
@@ -13,6 +15,7 @@ const _reserveService = ReserveService.getInstance();
 router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
+  authorizeRoleHandler([roleHandler.Admin]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const [reserves, reservesTotal] = await Promise.all([
@@ -33,6 +36,7 @@ router.get(
 router.get(
   '/:reserveId',
   passport.authenticate('jwt', { session: false }),
+  authorizeRoleHandler([roleHandler.Admin]),
   reserveIdValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { reserveId } = req.params;
@@ -52,6 +56,7 @@ router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
   createReserveValidator,
+  authorizeRoleHandler([roleHandler.Customer]),
   async (req: Request, res: Response, next: NextFunction) => {
     const { body: reserve } = req;
     try {
@@ -69,6 +74,7 @@ router.post(
 router.put(
   '/:reserveId',
   passport.authenticate('jwt', { session: false }),
+  authorizeRoleHandler([roleHandler.Admin]),
   updateReserveValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { reserveId } = req.params;
@@ -91,6 +97,7 @@ router.put(
 router.delete(
   '/:reserveId',
   passport.authenticate('jwt', { session: false }),
+  authorizeRoleHandler([roleHandler.Admin]),
   reserveIdValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { reserveId } = req.params;

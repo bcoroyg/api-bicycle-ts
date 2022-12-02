@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import passport from 'passport';
 import { BicycleService } from '../services';
+import authorizeRoleHandler from '../utils/middlewares/authorizeRoleHandler';
+import roleHandler from '../utils/roleHandler';
 import {
   bicycleIdValidator,
   createBicycleValidator,
@@ -45,6 +47,7 @@ router.get(
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
+  authorizeRoleHandler([roleHandler.Admin]),
   createBicycleValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     const { body: bicycle } = req;
@@ -63,6 +66,7 @@ router.post(
 router.put(
   '/:bicycleId',
   passport.authenticate('jwt', { session: false }),
+  authorizeRoleHandler([roleHandler.Admin]),
   async (req: Request, res: Response, next: NextFunction) => {
     const { bicycleId } = req.params;
     const { body: bicycle } = req;
@@ -85,6 +89,7 @@ router.delete(
   '/:bicycleId',
   bicycleIdValidator,
   passport.authenticate('jwt', { session: false }),
+  authorizeRoleHandler([roleHandler.Admin]),
   async (req: Request, res: Response, next: NextFunction) => {
     const { bicycleId } = req.params;
     try {

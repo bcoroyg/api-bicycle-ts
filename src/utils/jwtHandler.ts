@@ -3,8 +3,8 @@ import config from '../config';
 
 const generateToken = (user: any) => {
   return new Promise((resolve, reject) => {
-    const { _id, email, name } = user;
-    const payload = { uid: _id, email, name };
+    const { _id, email, name, role } = user;
+    const payload = { uid: _id, email, name, role };
     sign(
       payload,
       <string>config.jwtSecret,
