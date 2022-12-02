@@ -47,4 +47,15 @@ export class AuthService {
     const registeredUser = await models.User.create(data);
     return registeredUser;
   }
+
+  async confirmAccountUser(token:string) {
+    const user = await models.User.findOne({token});
+    if(!user){
+      throw new BadRequest('We did not find a user with this token.')
+    }
+    user.verified = true;
+    user.token = undefined;
+    await user.save();
+    return user._id;
+  }
 }

@@ -38,4 +38,20 @@ router.post(
   }
 );
 
+router.get(
+  '/confirmation-account/:token',
+  async (req, res, next) => {
+    const { token } = req.params;
+    try {
+      const user = await _authService.confirmAccountUser(token);
+      res.status(200).json({
+        data: user,
+        msg: 'Account actived!',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default router;
