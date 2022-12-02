@@ -1,3 +1,4 @@
+import { NotFound } from 'http-errors';
 import models from '../database/models';
 
 export class BicycleService {
@@ -26,6 +27,9 @@ export class BicycleService {
   //get bicycle
   async getBicycleById(bicycleId: string) {
     const bicycle = await models.Bicycle.findById(bicycleId);
+    if (!bicycle) {
+      throw new NotFound(`bicycle with id ${bicycleId} not found!`);
+    }
     return bicycle;
   }
   //create bicycle
@@ -42,11 +46,17 @@ export class BicycleService {
         new: true,
       }
     );
+    if (!updatedBicycle) {
+      throw new NotFound(`bicycle with id ${bicycleId} not found!`);
+    }
     return updatedBicycle;
   }
   //delete bicycle
   async deleteBicycle(bicycleId: string) {
     const deletedBicycle = await models.Bicycle.findByIdAndDelete(bicycleId);
+    if (!deletedBicycle) {
+      throw new NotFound(`bicycle with id ${bicycleId} not found!`);
+    }
     return deletedBicycle?._id;
   }
 }
