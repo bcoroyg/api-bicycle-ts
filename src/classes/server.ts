@@ -19,7 +19,8 @@ export class Server {
     this.routes();
 
     //database
-    this.dbConnect();
+    // desactivar en test
+    config.test ? null : this.dbConnect();
 
     //middlewares error
     this.errors();
@@ -54,5 +55,10 @@ export class Server {
     this.app.listen(this.port, () => {
       console.log('Server running');
     });
+  }
+
+  //server testing app
+  get appServer(): Application {
+    return this.app;
   }
 }
