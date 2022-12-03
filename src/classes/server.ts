@@ -1,9 +1,12 @@
 import express, { Application } from 'express';
 import logger from 'morgan';
+import SwaggerUI from 'swagger-ui-express';
 import config from '../config';
 import routerAPI from '../routes';
 import { errorHandler, logErrors, notFoundHandler } from '../utils/middlewares';
 import dbConnection from './../lib';
+
+import openApiConfiguration from '../documentation';
 
 export class Server {
   private app: Application;
@@ -37,6 +40,14 @@ export class Server {
 
   routes() {
     routerAPI(this.app);
+     // activar en desarrollo
+    config.dev
+      ? this.app.use(
+          '/docs',
+          SwaggerUI.serve,
+          SwaggerUI.setup(openApiConfiguration)
+        )
+      : null;
   }
 
   async dbConnect() {

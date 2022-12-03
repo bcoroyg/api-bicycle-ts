@@ -1,4 +1,4 @@
-import { BadRequest } from 'http-errors';
+import { BadRequest, NotFound } from 'http-errors';
 import config from '../config';
 import models from '../database/models';
 import { sendMail } from '../utils/mailer/nodemailer';
@@ -62,7 +62,7 @@ export class AuthService {
   async forgotPassword(email: string) {
     const userDB = await models.User.findOne({ email });
     if (!userDB) {
-      throw new BadRequest('User not found!');
+      throw new NotFound('User not found!');
     }
     //Generar token de Email
     const tokenEmail = tokenEmailHandler(3600000);
