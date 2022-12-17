@@ -12,10 +12,9 @@ const swaggerDefinition = {
   ],
   components: {
     securitySchemes: {
-      ApiKeyAuth: {
-        type: 'apiKey',
-        in: 'header',
-        name: 'Authorization',
+      BearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
       },
     },
     schemas: {

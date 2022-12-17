@@ -11,6 +11,29 @@ import {
 const router = Router();
 const _bicycleService = BicycleService.getInstance();
 
+/**
+ * @openapi
+ * tags:
+ *  - name: Bicycle
+ *    description: Bicycle endpoits
+ */
+
+/**
+ * @openapi
+ * /bicycles:
+ *    get:
+ *      tags: [Bicycle]
+ *      summary: "return all bicycles"
+ *      responses:
+ *        '200':
+ *          description: all bicycles.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: "#/components/schemas/Bicycle"
+ */
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const [bicycles, bicyclesTotal] = await Promise.all([
@@ -27,6 +50,30 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+/**
+ * @openapi
+ * /bicycles/{bicycleId}:
+ *    get:
+ *      tags: [Bicycle]
+ *      summary: "one bicycle"
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: the bicycle id
+ *      responses:
+ *        '200':
+ *          description: one bicycle.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                $ref: "#/components/schemas/Bicycle"
+ *        '404':
+ *          description: Bicycle not found!.
+ */
 router.get(
   '/:bicycleId',
   bicycleIdValidator,
@@ -43,7 +90,29 @@ router.get(
     }
   }
 );
-
+/**
+ * @openapi
+ * /bicycles:
+ *    post:
+ *      tags: [Bicycle]
+ *      summary: "create new bicycle"
+ *      security:
+ *        - BearerAuth: []
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              $ref: "#/components/schemas/Bicycle"
+ *      responses:
+ *        '201':
+ *          description: new bicycle created!.
+ *        '401':
+ *          description: Access denied. We need a valid token.
+ *        '403':
+ *          description: You do not have the permitted role to access this resource.
+ */
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
@@ -63,6 +132,38 @@ router.post(
   }
 );
 
+/**
+ * @openapi
+ * /bicycles/{bicycleId}:
+ *    put:
+ *      tags: [Bicycle]
+ *      summary: "update bicycle"
+ *      security:
+ *        - BearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: the bicycle id
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              $ref: "#/components/schemas/Bicycle"
+ *      responses:
+ *        '200':
+ *          description: bicycle updated!.
+ *        '401':
+ *          description: Access denied. We need a valid token.
+ *        '403':
+ *          description: You do not have the permitted role to access this resource.
+ *        '404':
+ *          description: Bicycle not found!.
+ */
 router.put(
   '/:bicycleId',
   passport.authenticate('jwt', { session: false }),
@@ -85,6 +186,31 @@ router.put(
   }
 );
 
+/**
+ * @openapi
+ * /bicycles/{bicycleId}:
+ *    delete:
+ *      tags: [Bicycle]
+ *      summary: "delete bicycle"
+ *      security:
+ *        - BearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: the bicycle id
+ *      responses:
+ *        '200':
+ *          description: bicycle deleted!.
+ *        '401':
+ *          description: Access denied. We need a valid token.
+ *        '403':
+ *          description: You do not have the permitted role to access this resource.
+ *        '404':
+ *          description: Bicycle not found!.
+ */
 router.delete(
   '/:bicycleId',
   bicycleIdValidator,
